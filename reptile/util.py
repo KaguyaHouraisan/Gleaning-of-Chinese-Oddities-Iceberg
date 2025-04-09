@@ -31,15 +31,19 @@ def reptile_for_sina_blog(user_id, start_page, end_page, target_string, latency=
 
     with open('output.txt', 'w') as file:
         for url in clean_url:
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
 
-            if response.status_code == 200:
-                print(f"{url}")
-                soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+                if response.status_code == 200:
+                    print(f"{url}")
+                    soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
 
-                if target_string in str(soup):
-                    file.write(f"{url}\n")
-            else:
-                print(f"{response.status_code} for {url}")
+                    if target_string in str(soup):
+                        file.write(f"{url}\n")
+                else:
+                    print(f"{response.status_code} for {url}")
+
+            except Exception as e:
+                print(f"{e} for {url}")
 
             time.sleep(latency)
